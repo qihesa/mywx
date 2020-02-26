@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="mydiv">div</div>
+		<script type="text/javascript">
+			
+			// (function tm(x,y){
+			// 	arguments[0]=100;
+			// 	y=200;
+			// 	console.log(x,y,arguments)
+			// })(10,20);
+			// (function tn(x,y){
+			// 	'use strict';
+			// 	arguments[0]=100;
+			// 	y=200;
+			// 	console.log(x,y,arguments)
+			// })(10,20);
+			//作业题1
+			// var x=10;//1先初始化arguments实参集合，2创建形参变量并赋值，3代码执行
+			// ~function(x){
+			// 	console.log(x);
+			// 	x=x||20&&30||40;
+			// 	console.log(x)
+			// }();
+			// console.log(x)
+			//作业2
+			// let x=[1,2],
+			//     y=[3,4];
+			// ~function(x){
+			// 	x.push('A');
+			// 	x=x.slice(0);
+			// 	x.push('B');
+			// 	x=y;
+			// 	x.push('c');
+			// 	console.log(x,y)
+			// }(x);
+			// console.log(x,y)
+			// //作业3
+			// let res=parseInt('left:20px');
+			// if(res===200){
+			// 	alert(200);
+			// }else if(res===NaN){
+			// 	alert(NaN)
+			// }else if(typeof res==='number'){
+			// 	alert('number')
+			// }else{
+			// 	alert('in')
+			// }
+			//作业4
+			// let x=5;
+			// function fn(x){
+			// 	return function(y){
+			// 		console.log(y+(++x));
+			// 	}
+			// }
+			// let f=fn(6)
+			// f(7);//y=7;x=6   =>14
+			// fn(8)(9);//18
+			// f(10);//18
+			// console.log(x)//5
+			  //当没有参数x时
+			//   let x=5;
+			//   function fn(){
+			//   	return function(y){
+			//   		console.log(y+(++x));
+			//   	}
+			//   }
+			//   let f=fn(6)
+			//   f(7);//y=7;x=5 7+6=13
+			//   fn(8)(9);//y=9;x=6 9+7=16
+			//   f(10);//y=10;x=7 10+8=18
+			//   console.log(x)//8
+			// //作业5
+			// let a=0,b=0;
+			// function A(a){
+			// 	A=function(b){
+			// 		alert(a+b++)
+			// 	}
+			// 	alert(a++)
+			// };
+			// A(1);
+			// A(2);
+			//作业6
+			var x=3,obj={x:5};
+			obj.fn=(function(){
+				this.x *= ++x;
+				return function(y){
+					this.x *=(++x)+y;
+					console.log(x)
+				}
+			})();
+			var fn=obj.fn;
+			obj.fn(6);//13
+			fn(4);//234
+			console.log(obj.x,x);//95,234
+			
+			//再次印象深刻的闭包
+			// for(var i=0;i<5;i++){
+			// 	(function(a){
+			// 		setTimeout(function(){
+			// 			console.log(a)
+			// 		})
+			// 	})(i)
+			// }
+			// for(var i=0;i<5;i++){
+			// 	console.log(i)
+			// }
+			// console.log(a,window.a,'a' in window)
+			// var a=10;
+			// console.log(a,window.a)
+			
+			// console.log('b' in window)
+			// b=20;
+			// console.log(b,window.b)
+			
+			//this的指向
+			// 如果前面有.则.前面的就是this指向，否则就是window
+			//给元素绑定事件时，this☞元素本身；
+			var t=10;//window.t:10
+			var obj={
+				t:100,
+				fn:function(){
+					console.log(this.t)
+				}
+			}
+			var fn=obj.fn;
+			fn();//10
+			obj.fn();//100
+			var myDiv=document.getElementById('mydiv');
+			myDiv.t=1000
+			// myDiv.onclick=function(){
+			// 	this.style.background='red'
+			// 	// obj.fn()//100
+			// 	fn();//10
+			// }
+			myDiv.onclick=obj.fn;//1000;
+			console.dir(Array.prototype)
+			console.dir(String.prototype)
+			console.dir(Function.prototype)
+			console.dir(Number.prototype)
+			console.dir(Object.prototype)
+			var arr=Array.prototype
+			for(var i in arr){
+				console.dir(arr[i])
+			}
+		</script>
+	</body>
+</html>

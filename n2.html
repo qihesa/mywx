@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//一：var 和function存在变量提升；
+			//var提前声明不定义
+			//function声明定义都处理 
+			//var声明全局变量会在window添加同名属性；该属性和var的全局变量存在映射机制
+			// console.log('a' in window)
+			// console.log(window.a)
+			// console.log(a)
+			
+			// var a=10;
+			// console.log('b' in window)
+			// console.log(window.b)
+			// console.log(b)
+			
+			// b=20//window.b=20的简写
+			
+			// console.log(n,m)//undefined,undefined
+			// var n=12,
+			//     m=12;
+			// function foo(){
+			// 	console.log(n,m)//undefined,12
+			// 	var n=m=13
+			// 	console.log(n,m)//13,13
+			// }
+			// foo()
+			// console.log(n,m)//12,13
+			// fn2()
+			// fn1();
+			//二： //等号左边变量提升
+			// var fn1=function(){
+			// 	console.log('1')
+			// }
+			// function fn2(){
+			// 	console.log('2')
+			// }
+			// fn1()
+			// fn2()
+			
+			//三：条件判断下的变量提升
+			//老版本浏览var和function变量提示机制不变
+			//新浏览器为了迎合es6的块级作用域，function的变量提升只声明
+				console.log(a)
+				if(2===3){
+					var a=10
+					function sum(){
+						console.log('执行')
+					}
+				}
+				console.log(a)
+				console.log(w)
+				console.log(sum)
+				if('w' in window){
+					console.log(w)
+					var w=100
+				}
+				console.log(w)
+			//练习题
+				// f=function(){
+				// 	return true
+				// };
+				// g=function(){
+				// 	return false
+				// };
+				// ~function(){
+				// 	if(g()&&[]===![]){
+				// 		f=function(){
+				// 			return false;
+				// 		};
+				// 		function g(){
+				// 			return true
+				// 		}
+				// 	}
+				// }();
+				// console.log(f());
+				// console.log(g())
+				//新版本中报错
+				//老版本 false false
+				//练习2
+				console.log(tab)//undefined
+				//注意：在大括号内部也会类似变量提升function的声明和定义
+				if(1===1){
+					console.log(tab)//字符串函数代码
+					function tab(){
+						console.log('1')
+					}
+				}
+				console.log(tab)//字符串函数代码
+				
+			//三：重名问题
+			 // 1.var和function声明相同名字也算重名
+			 //2.重名的处理：如果重名不会重新声明只会重新定义
+			  //例题
+			  // cm()//4
+			  // function cm(){console.log('1')}
+			  // cm()//4
+			  // function cm(){console.log('2')}
+			  // cm()//4
+			  // var cm=100
+			  // cm()//报错
+			  // function cm(){console.log('3')}
+			  // cm()
+			  // function cm(){console.log('4')}
+			  // 分析：var和function变量提升
+			  // function:
+			  // cm=...1
+			  //    ...2
+				 // ...3
+				 // ...4
+			  // var:只声明但是之前function已经声明cm，所以不声明,
+			  // 执行到var cm=100
+			  // cm=10（不是函数）
+			  
+			  //四：ES6中let和const class没有变量提升，也没有和window的映射机制
+			  //但是有类似于变量提升的重复新检测，一旦在当前作用域发现重名就报错，不会声明和定义变量
+			     //例子：
+				 // console.log(k)
+				 let k=10//Identifier 'a' has already been declared
+			     // let k=200
+				 //let的块级作用域
+					 let u=10,
+					 r=10;
+					 if(true){
+						 // console.log(u,r)//Cannot access 'u' before initialization
+						 let u=r=20
+					 }
+					 console.log(u,r)
+			 //五：let解决暂时性死区
+			 console.log(typeof y)//未声明变量typeof会undefined
+			 
+			 // console.log(typeof q)//Cannot access 'q' before initialization,未初始化不能访问q
+			 let q;
+		</script>
+	</body>
+</html>

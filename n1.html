@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div class="box">0</div>
+		<div class="box">1</div>
+		<div class="box">2</div>
+		<script type="text/javascript">
+			//闭包：函数执行形成一个私有作用域，保护里面的私有变量不受外界的干扰，这种保护机制叫做"闭包"
+			//市面上认为：形成一个不销毁的私有作用域（私有栈内存）
+			//两种闭包形式：
+				// （1）柯理化函数
+					function fn(){
+						return function(){
+							
+						}
+					}
+					var f=fn()
+				//（2）惰性函数
+				var fm=(function(){
+					
+				})();
+			//闭包作用：保护和保存
+			//一：保护：避免全局污染，保护私有变量不受外界干扰
+			// 例子：多人合作开发
+				(function(){
+					var a=10;
+					function tab(){}
+				})();
+			//封装插件类库也要尽量这样做，但是当我们的一些方法想要暴露给用户应该如何做呢？
+				//1.JQ的方式：将需要暴露的方法抛给全局
+				(function(){
+					function jq(){
+						console.log('jQuery')
+						//...
+					}
+					window.jq=window.$=jq
+				})();
+				jq()
+				$()
+				//zepto的方式：基于return把需要供外面使用的方法暴露出去
+				var zepto=(function(){
+					//...
+					return {
+						// xxx:function(){}
+						tab(){
+							console.log('zepto')
+						}
+					}
+				})();
+				zepto.tab()
+			//(2)保存
+			  // <1>setTimeout
+					  // for(var i=0;i<3;i++){
+						 //  setTimeout(function(){
+							//   console.log(i)
+						 //  },1)
+					  // }
+					  // console.log(i)//3
+				 // 解决方案1，传参数，
+					  // 执行settimeout时里面函数接收实参，之后运行可以在函数作用域里找到i.
+						/*
+						for(var i=0;i<3;i++){
+										  setTimeout(function(i){
+											  console.log(i)
+										  },1,i)
+						}
+						*/
+					  //传统语法，会把for循环里的i作为全局变量，不认为{}有作用域，i沿着作用域链从一直查找到window，
+					  //settimeout执行时会被挂起，执行时循环已经结束，i=3;
+				  //解决方案2，闭包
+				  for(var i=0;i<3;i++){
+				  		(function(i){
+							setTimeout(function(){
+								console.log(i)
+							},1)
+						})(i);
+				  }
+				  
+			 //<2>事件绑定 
+					  /*
+					  var box=document.getElementsByClassName('box')
+					  for(var x=0;x<box.length;x++){
+						  box[x].onclick=function(){
+							  console.log('index'+x)
+						  }
+					  }
+					  */
+					  //事件绑定也同理，所有的事件绑定都是异步编程，如果没有完成不在等待，继续执行下面的任务
+					  //事件绑定后，不再等待执行，继续执行下一个任务，所以点击执行的时候，循环早已经结束，x=3,所以不响应
+					   // 解决方案1：自定义属性(es5语法最优)
+						   // var box=document.getElementsByClassName('box')
+						   // for(var x=0;x<box.length;x++){
+							  // box[x].index=x
+							  // box[x].onclick=function(){
+								 //  console.log('index'+this.index)
+							  // }
+						   // }
+					  //解决方案2：闭包，形成一个私有作用域,形成三个不被销毁的栈内存；
+					     //不推荐第一种
+							/*
+							var box=document.getElementsByClassName('box')
+							for(var x=0;x<box.length;x++){
+							  box[x].onclick=(function(a){
+								  return function(){
+									  console.log('index'+a)
+								  }
+							  })(x);
+							}
+							//return的函数被占用，不能释放
+							*/
+						//推荐
+							var box=document.getElementsByClassName('box')
+							for(var x=0;x<box.length;x++){
+								(function(n){
+									box[n].onclick=function(){
+										console.log('index'+n)
+									}
+								})(x);
+							}
+							//box就是全局变量，形成三个栈内存，被全局变量box的属性占用，所以也不能释放
+			//解决方案3：ES6，let会在循环中形成3个块级作用域，ES6中循环体，判断体都是块级作用域
+			  for(let k=0;k<3;k++){
+				  setTimeout(function(){
+					  console.log(k)
+				  },1)
+			  }
+			  // {
+				 //  let k=0
+				 //  setTimeout...
+			  // }
+			  // {
+			  // 	  let k=1
+				 //  setTimeout...
+			  // }
+			  // {
+			  // 	  let k=2
+				 //  setTimeout...
+			  // }
+			  // console.log(k)//报错 k is not defined
+		</script>
+	</body>
+</html>
